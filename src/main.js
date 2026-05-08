@@ -1,26 +1,21 @@
 import ace from 'ace-builds/src-noconflict/ace';
 import 'ace-builds/src-noconflict/theme-monokai';
 import 'ace-builds/src-noconflict/ext-language_tools';
-
 import './mode-nbcl.js';
 import NBCLWorker from './worker.js?worker';
-let worker;
 
+// State & Selectors
+let worker;
+let runTimeout;
+const main = document.querySelector('main');
+const output = document.getElementById('output');
 const runBtn = document.getElementById('run-btn');
 const stopBtn = document.getElementById('stop-btn');
-const themeSelect = document.getElementById('theme-select');
-const exampleSelect = document.getElementById('example-select');
-const output = document.getElementById('output');
-const example_files = import.meta.glob('./examples/*.nbl', { 
-    query: '?raw', 
-    import: 'default', 
-    eager: true 
-});
 
+// Editor Setup
 const editor = ace.edit("editor");
 editor.setTheme("ace/theme/monokai");
 editor.session.setMode("ace/mode/nbcl");
-
 editor.setOptions({
     fontSize: "18px",
     fontFamily: "Consolas, 'Courier New', monospace",
@@ -28,82 +23,74 @@ editor.setOptions({
     enableBasicAutocompletion: true,
 });
 
-// Keybinding: Ctrl+Enter
-editor.commands.addCommand({
-    name: 'runCode',
-    bindKey: { win: 'Ctrl-Enter', mac: 'Command-Enter' },
-    exec: run,
-    readOnly: true
-});
-
+// Examples Loader
+const example_files = import.meta.glob('./examples/*.nbl', { query: '?raw', import: 'default', eager: true });
 const examples = Object.entries(example_files).reduce((acc, [path, content]) => {
-    const name = path.split('/').pop().replace('.nbl', '');
-    acc[name] = content;
+    acc[path.split('/').pop().replace('.nbl', '')] = content;
     return acc;
 }, {});
 
+// Layout & Tab Management
+function setViewMode(mode) {
+    main.classList.remove('layout-horizontal', 'layout-tabbed');
+    main.classList.add(`layout-${mode}`);
+    if (mode === 'tabbed') main.classList.add('show-editor');
+    editor.resize();
+}
+
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+    main.classList.remove('show-editor', 'show-output');
+    main.classList.add(`show-${tabName === 'editor' ? 'editor' : 'output'}`);
+    editor.resize();
+}
+
+// Worker Logic
 function initWorker() {
     if (worker) worker.terminate();
-    
     worker = new NBCLWorker();
-
     worker.onmessage = (e) => {
-        const { type } = e.data;
+        const { type, result, error } = e.data;
         if (type === 'ready') {
             runBtn.disabled = false;
             runBtn.textContent = 'Run';
         } else if (type === 'result') {
-            clearTimeout(runTimeout);
-            handleResult(e.data.result);
+            handleResult(result);
         } else if (type === 'error') {
-            clearTimeout(runTimeout);
-            showOutput(e.data.error, 'error');
-            runBtn.disabled = false;
-            stopBtn.disabled = true;
+            showOutput(error, 'error');
+            resetUI();
         }
     };
-
-    worker.onerror = (err) => {
-        showOutput(`Worker Error: ${err.message}`, 'error');
-        stop();
-    };
 }
-
-let runTimeout;
 
 function run() {
     const source = editor.getValue();
     if (!source.trim()) return;
-
     runBtn.disabled = true;
     stopBtn.disabled = false;
     showOutput('Running...', '');
-
     worker.postMessage({ type: 'run', source });
 }
 
 function stop() {
-    clearTimeout(runTimeout);
-    worker.terminate();
     initWorker();
-    runBtn.disabled = false;
-    stopBtn.disabled = true;
-    runBtn.textContent = 'Run';
+    resetUI();
     output.textContent += '\n[Process Stopped]';
 }
 
-function handleResult(result) {
+const resetUI = () => {
     runBtn.disabled = false;
     stopBtn.disabled = true;
     runBtn.textContent = 'Run';
-    
-    if (result.ok) {
-        let text = '';
-        if (result.output) text += result.output + '\n';
-        if (result.result !== undefined) text += '=> ' + JSON.stringify(result.result);
-        showOutput(text || '=> ()', 'success');
+};
+
+function handleResult(res) {
+    resetUI();
+    if (res.ok) {
+        const text = (res.output ? res.output + '\n' : '') + (res.result !== undefined ? `=> ${JSON.stringify(res.result)}` : '=> ()');
+        showOutput(text, 'success');
     } else {
-        showOutput(result.error, 'error');
+        showOutput(res.error, 'error');
     }
 }
 
@@ -112,55 +99,52 @@ function showOutput(text, className) {
     output.className = className;
 }
 
-// Dropdowns
-function setupCustomSelect(containerId, onChange) {
-    const container = document.getElementById(containerId);
-    const trigger = container.querySelector('.select-trigger');
-    const triggerText = trigger.querySelector('span');
-    const options = container.querySelectorAll('.option');
+// Dropdown Management
+function setupCustomSelect(id, callback) {
+    const el = document.getElementById(id);
+    const trigger = el.querySelector('.select-trigger');
 
-    // Toggle dropdown
-    trigger.addEventListener('click', (e) => {
-        document.querySelectorAll('.custom-select').forEach(cs => {
-            if(cs !== container) cs.classList.remove('active');
-        });
-        container.classList.toggle('active');
+    trigger.onclick = (e) => {
         e.stopPropagation();
-    });
+        document.querySelectorAll('.custom-select').forEach(s => s !== el && s.classList.remove('active'));
+        el.classList.toggle('active');
+    };
 
-    // Select option
-    options.forEach(opt => {
-        opt.addEventListener('click', () => {
-            const value = opt.getAttribute('data-value');
-            triggerText.textContent = opt.textContent;
-            container.classList.remove('active');
-            onChange(value);
-        });
+    el.querySelectorAll('.option').forEach(opt => {
+        opt.onclick = () => {
+            const val = opt.dataset.value;
+            el.querySelector('span').textContent = opt.textContent;
+            el.classList.remove('active');
+            callback(val);
+        };
     });
 }
 
-// Event Listeners 
-runBtn.addEventListener('click', run);
-stopBtn.addEventListener('click', stop);
+// Initializers
+window.addEventListener('click', () => document.querySelectorAll('.custom-select').forEach(s => s.classList.remove('active')));
+runBtn.onclick = run;
+stopBtn.onclick = stop;
 
-// Close dropdowns when clicking outside
-window.addEventListener('click', () => {
-    document.querySelectorAll('.custom-select').forEach(cs => cs.classList.remove('active'));
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.onclick = () => switchTab(btn.dataset.tab);
 });
 
-setupCustomSelect('theme-select-custom', (val) => {
-    editor.setTheme(val);
+setupCustomSelect('theme-select-custom', val => editor.setTheme(val));
+setupCustomSelect('example-select-custom', val => editor.setValue(examples[val] || '', -1));
+setupCustomSelect('view-select-custom', val => setViewMode(val));
+
+editor.commands.addCommand({
+    name: 'runCode',
+    bindKey: { win: 'Ctrl-Enter', mac: 'Command-Enter' },
+    exec: run
 });
 
-setupCustomSelect('example-select-custom', (val) => {
-    if (examples[val]) {
-        editor.setValue(examples[val], -1);
-    }
-});
+// Auto-detect mobile and load default tabbed view
+window.onload = () => {
+    const isMobile = window.innerWidth <= 768;
+    setViewMode(isMobile ? 'tabbed' : 'horizontal');
+    if (isMobile) document.querySelector('#view-select-custom span').textContent = 'Tabbed';
 
-window.onload = function() {
-    editor.setValue(examples.hello, -1);
+    editor.setValue(examples.hello || '', -1);
+    initWorker();
 };
-
-// Initialize on load
-initWorker();

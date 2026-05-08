@@ -1,6 +1,9 @@
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
 
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     height: 100vh;
@@ -10,6 +13,72 @@ body, html {
     background: #1e1e1e;
     color: white;
     overflow: hidden;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    width: 100%;
+    position: relative;
+}
+
+/* Horizontal Mode (Default) */
+main.layout-horizontal #editor {
+    flex: 1;
+    border-right: 1px solid #333;
+}
+
+main.layout-horizontal #output-panel {
+    width: 40%;
+    min-width: 300px;
+}
+
+main.layout-horizontal #tab-nav {
+    display: none;
+}
+
+/* Tabbed Mode (Mobile/Phone) */
+main.layout-tabbed {
+    flex-direction: column;
+}
+
+main.layout-tabbed #tab-nav {
+    display: flex;
+    background: #252526;
+    border-bottom: 1px solid #333;
+    height: 40px;
+}
+
+main.layout-tabbed .tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+main.layout-tabbed .tab-btn.active {
+    color: #fff;
+    border-bottom: 2px solid #007acc;
+    background: #333;
+}
+
+/* Toggle visibility in tabbed mode */
+main.layout-tabbed #editor,
+main.layout-tabbed #output-panel {
+    display: none;
+    height: 100%;
+}
+
+main.layout-tabbed.show-editor #editor {
+    display: block;
+}
+
+main.layout-tabbed.show-output #output-panel {
+    display: block;
 }
 
 /* Header & Controls */
@@ -23,13 +92,15 @@ header {
     border-bottom: 1px solid #333;
 }
 
-.controls-left, .controls-right {
+.controls-left,
+.controls-right {
     display: flex;
     gap: 8px;
     align-items: center;
 }
 
-button, select {
+button,
+select {
     padding: 6px 12px;
     border: 1px solid #444;
     background: #3c3c3c;
@@ -39,20 +110,36 @@ button, select {
     transition: all 0.2s;
 }
 
-button:hover:not(:disabled) { 
-    background: #4d4d4d; 
-    border-color: #666; 
-}
-button:disabled { 
-    opacity: 0.5; 
-    cursor: not-allowed; 
+button:hover:not(:disabled) {
+    background: #4d4d4d;
+    border-color: #666;
 }
 
-.btn-primary { background: green; color: white; border: none; font-weight: 600; }
-.btn-primary:hover:not(:disabled) { background: darkgreen; }
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 
-.btn-danger { background: darkred; color: white; border: none; }
-.btn-danger:hover:not(:disabled) { background: color-mix(darkred, black 20%); }
+.btn-primary {
+    background: green;
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: darkgreen;
+}
+
+.btn-danger {
+    background: darkred;
+    color: white;
+    border: none;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: color-mix(darkred, black 20%);
+}
 
 /* Custom Select Container */
 .custom-select {
@@ -91,7 +178,7 @@ button:disabled {
     margin-top: 4px;
     z-index: 1000;
     display: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 /* The Animation Class */
@@ -160,11 +247,23 @@ main {
     white-space: pre-wrap;
 }
 
-.success { color: #4ec9b0; }
-.error { color: #f44747; }
+.success {
+    color: #4ec9b0;
+}
+
+.error {
+    color: #f44747;
+}
 
 /* Animations */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
