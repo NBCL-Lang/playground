@@ -31,7 +31,7 @@ jobs:
         run: wasm-pack build --target web --features wasm
 
       - name: Copy pkg to playground
-        run: cp -r nbcl-lang/pkg ./public/pkg
+        run: cp -r nbcl-lang/pkg ./pkg
 
       - name: Setup Node
         uses: actions/setup-node@v4
