@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NBCL Playground</title>
   <link rel="icon" type="image/x-icon" href="/playground/favicon.svg">
-  <script type="module" crossorigin src="/playground/assets/index-CM4OnI2G.js"></script>
-  <link rel="stylesheet" crossorigin href="/playground/assets/index-BOFRfR3O.css">
+  <script type="module" crossorigin src="/playground/assets/index-DTBzeJ65.js"></script>
+  <link rel="stylesheet" crossorigin href="/playground/assets/index-D5_jNm1z.css">
 </head>
 <body>
   <header>
@@ -26,6 +26,14 @@
     </div>
 
     <div class="controls-right">
+      <div class="custom-select" id="view-select-custom">
+        <div class="select-trigger"><span>Horizontal</span></div>
+        <div class="select-options">
+          <div class="option" data-value="horizontal">Horizontal</div>
+          <div class="option" data-value="tabbed">Tabbed</div>
+        </div>
+      </div>
+
       <div class="custom-select" id="theme-select-custom">
         <div class="select-trigger"><span>Monokai</span></div>
         <div class="select-options">
@@ -40,7 +48,12 @@
       </div>
     </div>
   </header>
-  <main>
+  <main id="main-container" class="layout-horizontal">
+    <div id="tab-nav" class="hidden">
+      <button class="tab-btn active" data-tab="editor">Editor</button>
+      <button class="tab-btn" data-tab="output-panel">Output</button>
+    </div>
+
     <div id="editor"></div>
     <div id="output-panel">
       <div id="output-header">Output</div>
