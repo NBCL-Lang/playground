@@ -2,7 +2,7 @@ let wasm_ready = false;
 let nbcl;
 
 async function init() {
-    nbcl = await import('../pkg/nbcl.js');
+    nbcl = await import('/pkg/nbcl.js');
     await nbcl.default();
     wasm_ready = true;
     self.postMessage({ type: 'ready' });

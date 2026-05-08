@@ -1,0 +1,51 @@
+name: Build and Deploy Playground
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout playground repo
+        uses: actions/checkout@v4
+
+      - name: Checkout nbcl language repo
+        uses: actions/checkout@v4
+        with:
+          repository: NBCL-Lang/nbcl
+          path: nbcl-lang
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Build WASM
+        working-directory: nbcl-lang
+        run: wasm-pack build --target web --features wasm
+
+      - name: Copy pkg to playground
+        run: cp -r nbcl-lang/pkg ./public/pkg
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build with Vite
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
