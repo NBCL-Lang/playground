@@ -1,0 +1,4 @@
+local x = 10
+local y = 20
+local result = (x + y) * 2
+print(result)

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NBCL Playground</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.svg">
+  <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+  <header>
+    <div class="controls-left">
+      <button id="run-btn" class="btn-primary" disabled>Loading...</button>
+      <button id="stop-btn" class="btn-danger" disabled>Stop</button>
+
+      <div class="custom-select" id="example-select-custom">
+        <div class="select-trigger"><span>Hello World</span></div>
+        <div class="select-options">
+          <div class="option" data-value="hello">Hello World</div>
+          <div class="option" data-value="fibonacci">Fibonacci</div>
+          <div class="option" data-value="math">Math Logic</div>
+          <div class="option" data-value="nodes">Node Config</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-right">
+      <div class="custom-select" id="theme-select-custom">
+        <div class="select-trigger"><span>Monokai</span></div>
+        <div class="select-options">
+          <div class="optgroup-label">Dark Themes</div>
+          <div class="option" data-value="ace/theme/monokai">Monokai</div>
+          <div class="option" data-value="ace/theme/dracula">Dracula</div>
+          <div class="option" data-value="ace/theme/terminal">Terminal</div>
+          <div class="optgroup-label">Light Themes</div>
+          <div class="option" data-value="ace/theme/chrome">Chrome</div>
+          <div class="option" data-value="ace/theme/github">GitHub</div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div id="editor"></div>
+    <div id="output-panel">
+      <div id="output-header">Output</div>
+      <pre id="output"></pre>
+    </div>
+  </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/ace.js"></script>
+  <script type="module" src="src/main.js"></script>
+</body>
+
+</html>

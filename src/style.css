@@ -1,0 +1,170 @@
+* { box-sizing: border-box; }
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    display: flex;
+    flex-direction: column;
+    background: #1e1e1e;
+    color: white;
+    overflow: hidden;
+}
+
+/* Header & Controls */
+header {
+    height: 50px;
+    background: #252526;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    border-bottom: 1px solid #333;
+}
+
+.controls-left, .controls-right {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+button, select {
+    padding: 6px 12px;
+    border: 1px solid #444;
+    background: #3c3c3c;
+    color: #eee;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+button:hover:not(:disabled) { 
+    background: #4d4d4d; 
+    border-color: #666; 
+}
+button:disabled { 
+    opacity: 0.5; 
+    cursor: not-allowed; 
+}
+
+.btn-primary { background: green; color: white; border: none; font-weight: 600; }
+.btn-primary:hover:not(:disabled) { background: darkgreen; }
+
+.btn-danger { background: darkred; color: white; border: none; }
+.btn-danger:hover:not(:disabled) { background: color-mix(darkred, black 20%); }
+
+/* Custom Select Container */
+.custom-select {
+    position: relative;
+    user-select: none;
+    min-width: 130px;
+}
+
+.select-trigger {
+    padding: 6px 12px;
+    background: #3c3c3c;
+    border: 1px solid #444;
+    color: #eee;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.select-trigger:after {
+    content: '▼';
+    font-size: 0.6rem;
+    margin-left: 10px;
+    color: #888;
+}
+
+/* The Popup Box */
+.select-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #2d2d2d;
+    border: 1px solid #444;
+    margin-top: 4px;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+/* The Animation Class */
+.custom-select.active .select-options {
+    display: block;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.option {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.option:hover {
+    background: #007acc;
+    color: white;
+}
+
+.optgroup-label {
+    padding: 8px 12px 4px 12px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: #888;
+    font-weight: bold;
+}
+
+/* Main Layout */
+main {
+    flex: 1;
+    display: flex;
+    width: 100%;
+}
+
+#editor {
+    flex: 1;
+    height: 100%;
+}
+
+#output-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #0f0f0f;
+    border-left: 1px solid #333;
+}
+
+#output-header {
+    background: #252526;
+    padding: 6px 15px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #888;
+    border-bottom: 1px solid #222;
+}
+
+#output {
+    flex: 1;
+    margin: 0;
+    padding: 15px;
+    overflow-y: auto;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+.success { color: #4ec9b0; }
+.error { color: #f44747; }
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
