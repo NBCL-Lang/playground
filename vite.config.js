@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: '/playground/', 
-  
+  base: '/playground/',
   build: {
-    target: 'esnext'
+    target: 'esnext',
+    chunkSizeWarningLimit: 600, 
   }
 });

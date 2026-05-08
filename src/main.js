@@ -1,5 +1,11 @@
+import ace from 'ace-builds/src-noconflict/ace';
+import 'ace-builds/src-noconflict/theme-monokai';
+import 'ace-builds/src-noconflict/ext-language_tools';
+
+import './mode-nbcl.js';
 import NBCLWorker from './worker.js?worker';
 let worker;
+
 const runBtn = document.getElementById('run-btn');
 const stopBtn = document.getElementById('stop-btn');
 const themeSelect = document.getElementById('theme-select');
@@ -13,7 +19,7 @@ const example_files = import.meta.glob('./examples/*.nbl', {
 
 const editor = ace.edit("editor");
 editor.setTheme("ace/theme/monokai");
-editor.session.setMode("ace/mode/python");
+editor.session.setMode("ace/mode/nbcl");
 
 editor.setOptions({
     fontSize: "18px",
