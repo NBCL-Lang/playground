@@ -33,7 +33,7 @@ jobs:
 
       - name: Build WASM
         working-directory: nbcl-lang
-        run: wasm-pack build --target web --features wasm
+        run: wasm-pack build --target web --features "wasm,pretty-errors"
 
       - name: Copy pkg to playground
         run: cp -r nbcl-lang/pkg ./pkg
