@@ -87,7 +87,7 @@ const resetUI = () => {
 function handleResult(res) {
     resetUI();
     if (res.ok) {
-        const text = (res.output ? res.output + '\n' : '') + (res.result !== undefined ? `=> ${JSON.stringify(res.result)}` : '=> ()');
+        const text = (res.output ? res.output + '\n' : '') + (res.result !== undefined ? `=> ${JSON.stringify(res.result, null, 2)}` : '=> ()');
         showOutput(text, 'success');
     } else {
         showOutput(res.error, 'error');
