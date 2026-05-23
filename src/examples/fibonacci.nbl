@@ -1,11 +1,11 @@
 fn fibonacci(n) {
-    local a = 0
-    local b = 1
-    
-    for i in 0..n { 
+    let a = 0
+    let b = 1
+
+    for i in 0..n {
         print(a)
-        
-        local temp = a
+
+        let temp = a
         set a = b
         set b = temp + b
     }
