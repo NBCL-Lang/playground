@@ -18,7 +18,7 @@ define("ace/mode/nbcl_highlight_rules", ["require", "exports", "module", "ace/li
                 },
                 {
                     token: ["keyword.declaration", "text", "entity.name.function"],
-                    regex: "(fn)(\\s+)([a-z][a-zA-Z0-9_]*)\\b" 
+                    regex: "(fn)(\\s+)([a-z][a-zA-Z0-9_]*)\\b"
                 },
                 {
                     token: ["keyword.declaration", "text", "entity.name.type"],
@@ -30,7 +30,7 @@ define("ace/mode/nbcl_highlight_rules", ["require", "exports", "module", "ace/li
                 },
                 {
                     token: "keyword.declaration",
-                    regex: "\\b(fn|component|import|as|local|global|set|any)\\b"
+                    regex: "\\b(fn|component|import|as|let|const|set|any)\\b"
                 },
                 {
                     token: "constant.language.boolean",
