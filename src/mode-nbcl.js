@@ -57,6 +57,15 @@ define("ace/mode/nbcl_highlight_rules", ["require", "exports", "module", "ace/li
                     regex: "\\b[a-z_][a-zA-Z0-9_]*(?=\\s*[:=])"
                 },
                 {
+                    token: ["string", "string", "string"],
+                    regex: "(r\")((?:[^\"])*)(\")"
+                },
+                {
+                    token: "string",
+                    regex: 'f"',
+                    next: "fstring"
+                },
+                {
                     token: "string",
                     regex: '"',
                     next: "qqstring"
@@ -78,6 +87,12 @@ define("ace/mode/nbcl_highlight_rules", ["require", "exports", "module", "ace/li
                     token: "keyword.operator",
                     regex: "=>|==|!=|<=|>=|&&|\\|\\||\\.\\.\\.(?:=)?|\\?\\.|[\\+\\-\\*/%<>!=\\.]|\\|(?!\\|)"
                 }
+            ],
+            "fstring": [
+                { token: "variable", regex: "\\$\\{[^}]*\\}" },
+                { token: "constant.character.escape", regex: "\\\\(?:[ntr\\\\\"'])" },
+                { token: "string", regex: '"', next: "start" },
+                { defaultToken: "string" }
             ],
             "blockComment": [
                 { regex: "-#", token: "comment.block", next: "start" },
